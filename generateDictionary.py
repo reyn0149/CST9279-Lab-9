@@ -17,28 +17,29 @@ def generateDictionary():
 def clearScreen(lcd):
     lcd.clear()
     lcd.show()
-
-def displayText(text,lcd,x,y):
-    lcd.clear()
-    width, height = lcd.dimensions()
-    image = Image.new('P', (width, height))
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype(fonts.AmaticSCBold, 12)
-    w, h = font.getsize(text)
-    draw.text((x,y), text, 1, font)
-    for x1 in range(x,x+w):
-        for y1 in range(y,y+h):
-            pixel = image.getpixel((x1, y1))
-            lcd.set_pixel(x1, y1, pixel)
-    lcd.show()
     
 dictionary = generateDictionary()
-displayText("Welcome! Press a key!",lcd,2,3)
 
 userInput = getchar()
 print(userInput)
+
 if userInput in dictionary:
-	clearScreen(lcd)
-	displayText(userInput,lcd,2,2)
+    objectHex = list(dictionary[userInput])
+    print objectHex
+    clearScreen(lcd)
+    row =[]
+    y = 5
+    i = 2
+    while i < 17:
+        hexChunk = objectHex[i] + objectHex[i+1]
+        objectBinary = list(bin(int(hexChunk,16))[2:].zfill(8))
+        print objectBinary
+        for x in range (len(objectBinary)):
+            
+            lcd.set_pixel(5+x,y,int(objectBinary[x]))
+            lcd.show()
+        i = i+2
+        y = y+1
+        
 else:
 	print("Sorry! That value isn't in my dictionary!")
